@@ -1,12 +1,35 @@
 import './App.css';
 import Todos from './components/Todos';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import TodoForm from './components/TodoForm';
+import db from './models/config'
 
 function App() {
 
-  const [todos, setTodos] = useState(['Take dogs for a walk', 'Take ya moms for a walk'])
+  useEffect(() => {
+
+    db.collection('todos').get().then((querySnapshot) => {
+      querySnapshot.forEach(doc => {
+        console.log(doc.data().todo)
+        setTodos([...todos, doc.data().todo])
+      })
+      // setTodos(querySnapshot.docs.map((todo) => {
+      //   setTodos(...todos, todo.data().todo)
+      //   console.log("Here", todos)
+      // })
+      })
+
+      // snapshot.forEach((todo) => {
+      //   setTodos(...todos, todos.push({id: todo.id, text: todo.data()}))
+      //   console.log("Here", todos)
+      // })
+  }, [])
+
+  const [todos, setTodos] = useState([])
   const [input, setInput] = useState('')
+
+  
+
 
   return (
     <div className="App">
